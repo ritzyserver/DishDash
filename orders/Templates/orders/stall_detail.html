@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ stall.name }} - Menu</title>
+</head>
+<body>
+    <h1>{{ stall.name }}</h1>
+    <p>{{ stall.description }}</p>
+
+    <h2>Menu</h2>
+    {% if stall.menuitem_set.all %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="customer_name">Your Name:</label>
+            <input type="text" name="customer_name" required><br><br>
+
+            <label for="menu_item_id">Select Item:</label>
+            <select name="menu_item_id" required>
+                {% for item in stall.menuitem_set.all %}
+                    <option value="{{ item.id }}">
+                        {{ item.name }} - ₹{{ item.price }}
+                    </option>
+                {% endfor %}
+            </select><br><br>
+
+            <label for="delivery_type">Delivery Type:</label>
+            <select name="delivery_type" required>
+                <option value="pickup">Pickup</option>
+                <option value="delivery">Delivery</option>
+            </select><br><br>
+            <label for="quantity">Quantity:</label>
+            <input type="number" name="quantity" min="1" value="1" required><br>
+            <button type="submit">Place Order</button>
+        </form>
+    {% else %}
+        <p>No menu items available.</p>
+    {% endif %}
+
+    <br><a href="{% url 'stall_list' %}">Back to Stall List</a>
+</body>
+</html>
+

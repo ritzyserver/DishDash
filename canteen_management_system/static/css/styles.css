@@ -1,0 +1,60 @@
+/* styles.css */
+
+/* Body and Background */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    color: #444;
+}
+
+/* Home Page Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Stall List */
+.stall-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.stall-card {
+    background-color: rgb(231, 45, 45);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stall-card h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.stall-card p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.stall-card a {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.stall-card a:hover {
+    background-color: #0056b3;
+}

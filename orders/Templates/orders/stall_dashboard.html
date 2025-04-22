@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Orders for {{ stall.name }}</h2>
+  <table border="1">
+    <tr>
+      <th>Customer</th>
+      <th>Item</th>
+      <th>Delivery Type</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+    {% for order in orders %}
+    <tr id="order-{{ order.id }}">
+      <td>{{ order.customer_name }}</td>
+      <td>{{ order.menu_item.name }}</td>
+      <td>{{ order.delivery_type }}</td>
+      <td class="status">{{ order.is_ready|yesno:"Ready,Not Ready" }}</td>
+      <td>
+        {% if not order.is_ready %}
+        <button onclick="markReady({{ order.id }})">Mark as Ready</button>
+        {% else %}
+        ✅
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <script>
+    function markReady(orderId) {
+      fetch(`/order/${orderId}/ready/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const row = document.getElementById(`order-${orderId}`);
+          row.querySelector('.status').innerText = 'Ready';
+          row.querySelector('button').remove();
+          row.querySelector('td:last-child').innerHTML = '✅';
+        }
+      });
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="styles" href="{% static 'css/styles.css' %}">
+<div class="container">
+    <h1><b> Dish Dash</b></h1>
+    <h2>Available Stalls</h2>
+
+    {% if stalls %}
+        <div class="stall-list">
+            {% for stall in stalls %}
+            <div class="stall-card">
+                <h3>{{ stall.name }}</h3>
+                <p>{{ stall.description }}</p>
+                <a href="{% url 'stall_detail' stall.id %}">Order Now</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No stalls available</p>
+    {% endif %}
+</div>
+{% endblock %}
