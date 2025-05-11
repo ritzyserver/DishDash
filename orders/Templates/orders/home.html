@@ -1,23 +1,67 @@
 {% extends 'orders/base.html' %}
 {% load static %}
+{% block title %}Home{% endblock %}
+
 {% block content %}
-<link rel="styles" href="{% static 'css/styles.css' %}">
-<div class="container">
-    <h1><b> Dish Dash</b></h1>
-    <h2>Available Stalls</h2>
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-5 animate__animated animate__fadeInDown" style="font-family: 'Times New Roman', serif; color: #800000; font-size: 40px;">Available Stalls</h2>
 
     {% if stalls %}
-        <div class="stall-list">
+        <div class="row justify-content-center">
             {% for stall in stalls %}
-            <div class="stall-card">
-                <h3>{{ stall.name }}</h3>
-                <p>{{ stall.description }}</p>
-                <a href="{% url 'stall_detail' stall.id %}">Order Now</a>
+            <div class="col-md-4 mb-4 animate__animated animate__zoomIn">
+                <div class="card h-100 shadow-lg border-0" style="background: #fff0f3; border-radius: 20px;">
+                    <div class="card-body text-center">
+                        <h3 class="card-title" style="color: #800000; font-weight: bold;">{{ stall.name }}</h3>
+                        <p class="card-text" style="color: #555;">{{ stall.description }}</p>
+                        <a href="{% url 'stall_detail' stall.id %}" class="btn btn-outline-success mt-3" style="border-radius: 30px; padding: 10px 25px;">Order Now</a>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>
     {% else %}
-        <p>No stalls available</p>
+        <p class="text-center text-muted">No stalls available at the moment.</p>
     {% endif %}
 </div>
+
+<!-- Food Items / Drinks Section -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4 animate__animated animate__fadeInUp" style="font-family: 'Times New Roman', serif; color: #800000; font-size: 36px;">Food Items & Drinks</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-4 animate__animated animate__fadeInLeft">
+            <div class="card shadow-lg text-center border-0" style="background: #e0f7fa; border-radius: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #006064;">Coffee</h5>
+                    <p class="card-text" style="color: #555;">Hot & Cold Variants</p>
+                    <a href="#" class="btn btn-outline-primary" style="border-radius: 20px;">Explore</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4 animate__animated animate__fadeInUp">
+            <div class="card shadow-lg text-center border-0" style="background: #ffe0b2; border-radius: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #e65100;">Sandwiches</h5>
+                    <p class="card-text" style="color: #555;">Freshly Made</p>
+                    <a href="#" class="btn btn-outline-primary" style="border-radius: 20px;">Explore</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4 animate__animated animate__fadeInRight">
+            <div class="card shadow-lg text-center border-0" style="background: #f3e5f5; border-radius: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #6a1b9a;">Drinks</h5>
+                    <p class="card-text" style="color: #555;">Cool Beverages</p>
+                    <a href="#" class="btn btn-outline-primary" style="border-radius: 20px;">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

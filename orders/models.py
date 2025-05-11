@@ -24,6 +24,7 @@ class Order(models.Model):
     is_paid = models.BooleanField(default=False)
     is_ready = models.BooleanField(default=False)
     order_time = models.DateTimeField(auto_now_add=True)
+    
 
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),

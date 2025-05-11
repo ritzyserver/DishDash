@@ -1,42 +1,90 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ stall.name }} - Menu</title>
-</head>
-<body>
-    <h1>{{ stall.name }}</h1>
-    <p>{{ stall.description }}</p>
+{% extends 'orders/base.html' %}
+{% load static %}
+{% block title %}{{ stall.name }}{% endblock %}
 
-    <h2>Menu</h2>
-    {% if stall.menuitem_set.all %}
-        <form method="post">
-            {% csrf_token %}
-            <label for="customer_name">Your Name:</label>
-            <input type="text" name="customer_name" required><br><br>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-            <label for="menu_item_id">Select Item:</label>
-            <select name="menu_item_id" required>
-                {% for item in stall.menuitem_set.all %}
-                    <option value="{{ item.id }}">
-                        {{ item.name }} - ₹{{ item.price }}
-                    </option>
-                {% endfor %}
-            </select><br><br>
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="font-family: 'Times New Roman', serif; color: #800000;">{{ stall.name }}</h2>
+    <p class="text-center text-muted">{{ stall.description }}</p>
 
-            <label for="delivery_type">Delivery Type:</label>
-            <select name="delivery_type" required>
-                <option value="pickup">Pickup</option>
-                <option value="delivery">Delivery</option>
-            </select><br><br>
-            <label for="quantity">Quantity:</label>
-            <input type="number" name="quantity" min="1" value="1" required><br>
-            <button type="submit">Place Order</button>
-        </form>
-    {% else %}
-        <p>No menu items available.</p>
+    {% if success_message %}
+        <div class="alert alert-success text-center">{{ success_message }}</div>
     {% endif %}
 
-    <br><a href="{% url 'stall_list' %}">Back to Stall List</a>
-</body>
-</html>
+    {% if show_auth_form %}
+        <div class="card mx-auto mb-5 p-4 shadow-lg" style="max-width: 400px; border-radius: 15px;">
+            <h5 class="text-center mb-3" style="color: #800000;">Please Login or Sign Up</h5>
 
+            {% if auth_error %}
+                <div class="alert alert-danger">{{ auth_error }}</div>
+            {% endif %}
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="login">
+                <div class="form-group mb-3">
+                    <label>Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100 mb-2">Login</button>
+            </form>
+
+            <hr>
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="signup">
+                <div class="form-group mb-3">
+                    <label>New Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label>New Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-outline-primary w-100">Sign Up</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if stall.menuitem_set.all %}
+        <div class="row justify-content-center">
+            {% for item in stall.menuitem_set.all %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-lg border-0" style="border-radius: 20px; background: #f9f9f9;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" style="color: #800000;">{{ item.name }}</h5>
+                        <p class="card-text" style="color: #333;">₹{{ item.price }}</p>
+
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="menu_item_id" value="{{ item.id }}">
+                            <input type="hidden" name="delivery_type" value="pickup">
+                            <div class="form-group">
+                                <label for="quantity">Quantity:</label>
+                                <input type="number" name="quantity" class="form-control mb-2" value="1" min="1" style="width: 80px; margin: auto;">
+                            </div>
+                            <button type="submit" class="btn btn-outline-success" style="border-radius: 30px;">Add to Cart</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No menu items available.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'view_cart' %}" class="btn btn-primary" style="border-radius: 30px;">View Cart 🛒</a>
+    </div>
+</div>
+
+{% endblock %}
