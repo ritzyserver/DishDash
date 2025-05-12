@@ -1,26 +1,34 @@
 {% extends 'orders/base.html' %}
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Latest Blog Posts</h2>
+    <h2 class="text-center mb-4">Recipe Blog</h2>
     <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">Healthy Eating at the Canteen</h5>
-                    <p class="card-text">Discover our new healthy menu options that are both delicious and nutritious!</p>
-                    <a href="#" class="btn btn-primary">Read more</a>
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    <p class="card-text">{{ recipe.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            <small>{{ recipe.cooking_time }} mins</small>
+                        </div>
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">View Recipe</a>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <small>By {{ recipe.stall.name }} • {{ recipe.created_at|date:"F j, Y" }}</small>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Behind the Scenes: Meet Our Chefs</h5>
-                    <p class="card-text">Learn about the passionate people preparing your favorite meals every day.</p>
-                    <a href="#" class="btn btn-primary">Read more</a>
-                </div>
-            </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>No recipes available yet.</p>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

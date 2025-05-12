@@ -11,6 +11,6 @@ path('cart/', views.view_cart, name='view_cart'),
 path('checkout/', views.checkout, name='checkout'),
 path('cart/update/<int:menu_item_id>/', views.update_cart_item, name='update_cart_item'),
 path('blogs/', views.blogs, name='blogs'),
-
+path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
+path('contacts/', views.contacts, name='contacts'),
 ]
-

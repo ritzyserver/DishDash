@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Stall, MenuItem, Order
+from .models import Stall, MenuItem, Order, Recipe
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -173,4 +173,13 @@ def checkout(request):
         'total_amount': total_amount
     })
 def blogs(request):
-    return render(request, 'orders/blogs.html')
+    recipes = Recipe.objects.all().order_by('-created_at')
+    return render(request, 'orders/blogs.html', {'recipes': recipes})
+
+def recipe_detail(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    return render(request, 'orders/recipe_detail.html', {'recipe': recipe})
+
+def contacts(request):
+    stalls = Stall.objects.all()
+    return render(request, 'orders/contacts.html', {'stalls': stalls})
