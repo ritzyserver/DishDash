@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 # Home page view (public)
 def home(request):
@@ -163,8 +165,12 @@ def checkout(request):
     total_amount = sum(item['total'] for item in grouped_orders)
 
     if request.method == 'POST':
+        from django.utils import timezone
+        checkout_time = timezone.now()
+        
         for order in orders:
             order.is_paid = True
+            order.order_time = checkout_time  # Set same timestamp for all orders in checkout
             order.save()
         return render(request, 'orders/payment_success.html')
 
@@ -172,6 +178,35 @@ def checkout(request):
         'grouped_orders': grouped_orders,
         'total_amount': total_amount
     })
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(
+        customer_name=request.user.username,
+        is_paid=True
+    ).order_by('-order_time')
+    
+    # Group orders by order time (rounded to minutes to group orders from same checkout)
+    grouped_orders = {}
+    for order in orders:
+        # Round to nearest minute to group orders placed in same checkout
+        order_time = order.order_time.replace(second=0, microsecond=0)
+        if order_time not in grouped_orders:
+            grouped_orders[order_time] = {
+                'orders': [],
+                'total': 0,
+                'status': order.status,
+                'time': order.order_time
+            }
+        grouped_orders[order_time]['orders'].append(order)
+        grouped_orders[order_time]['total'] += order.menu_item.price * order.quantity
+
+    # Sort orders by most recent first
+    sorted_orders = dict(sorted(grouped_orders.items(), key=lambda x: x[0], reverse=True))
+
+    return render(request, 'orders/order_history.html', {
+        'grouped_orders': sorted_orders.items()
+    })
+
 def blogs(request):
     recipes = Recipe.objects.all().order_by('-created_at')
     return render(request, 'orders/blogs.html', {'recipes': recipes})
@@ -183,3 +218,15 @@ def recipe_detail(request, recipe_id):
 def contacts(request):
     stalls = Stall.objects.all()
     return render(request, 'orders/contacts.html', {'stalls': stalls})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Registration successful!')
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'orders/register.html', {'form': form})

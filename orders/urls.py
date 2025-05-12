@@ -13,4 +13,5 @@ path('cart/update/<int:menu_item_id>/', views.update_cart_item, name='update_car
 path('blogs/', views.blogs, name='blogs'),
 path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
 path('contacts/', views.contacts, name='contacts'),
+path('order-history/', views.order_history, name='order_history'),
 ]

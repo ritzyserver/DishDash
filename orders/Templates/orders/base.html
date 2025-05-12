@@ -312,8 +312,10 @@
                         <img src="{% static 'images/profile-icon.png' %}" alt="Profile" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">View Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                        <li><a class="dropdown-item" href="{% url 'order_history' %}">Order History</a></li>
+                        <li><a class="dropdown-item" href="{% url 'view_cart' %}">View Cart</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 {% else %}
                     <a href="{% url 'login' %}" class="text-white fw-bold">Login</a>

@@ -48,3 +48,5 @@ ENV/
 .env.development.local
 .env.test.local
 .env.production.local
+
+DFD_diagrams.md

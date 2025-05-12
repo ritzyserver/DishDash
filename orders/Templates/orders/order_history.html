@@ -1,0 +1,59 @@
+{% extends 'orders/base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Order History</h2>
+
+    {% if grouped_orders %}
+        {% for time, order_group in grouped_orders %}
+        <div class="card mb-4 shadow">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Order from {{ order_group.time|date:"F j, Y, g:i a" }}</h5>
+                <span class="badge rounded-pill {% if order_group.status == 'COMPLETED' %}bg-success{% elif order_group.status == 'PREPARING' %}bg-warning{% else %}bg-info{% endif %}">
+                    {{ order_group.status }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Stall</th>
+                                <th>Quantity</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in order_group.orders %}
+                            <tr>
+                                <td>{{ order.menu_item.name }}</td>
+                                <td>{{ order.menu_item.stall.name }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td class="text-end">₹{{ order.menu_item.price }}</td>
+                                <td class="text-end">₹{{ order.menu_item.price|multiply:order.quantity }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
+                                <td class="text-end"><strong>₹{{ order_group.total }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <p class="mb-0">No order history available. Start ordering to see your history here!</p>
+                <a href="{% url 'stall_list' %}" class="btn btn-primary mt-3">Browse Stalls</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
