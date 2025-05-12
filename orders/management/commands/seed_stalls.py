@@ -5,6 +5,10 @@ class Command(BaseCommand):
     help = 'Seeds the database with stall data and menu items'
 
     def handle(self, *args, **kwargs):
+        
+        # Empty the database
+        Stall.objects.all().delete()
+        
         # Sample stalls data with menu items
         stalls_data = [
             {

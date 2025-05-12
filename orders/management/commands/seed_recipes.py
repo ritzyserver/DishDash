@@ -8,6 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         
+        # Empty the database
+        Recipe.objects.all().delete()
+        
         # Get or create stalls
         stall1, _ = Stall.objects.get_or_create(
             name='Dada ki CHAI',
